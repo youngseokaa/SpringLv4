@@ -27,9 +27,6 @@ public class WebSecurityConfig {
         return (web) -> web.ignoring()
                 .requestMatchers(PathRequest.toH2Console())
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-
-
-
     }
 
     @Bean

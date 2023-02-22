@@ -16,6 +16,7 @@ public class BoardResponseDto {
     private String Username;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private int heart;
     public BoardResponseDto(Board board, User user) {
         this.id = board.getId();
         this.title = board.getTitle();
@@ -23,6 +24,6 @@ public class BoardResponseDto {
         this.Username = user.getUsername();
         this.createdAt = board.getCreatedAt();
         this.modifiedAt = board.getModifiedAt();
+        this.heart = board.getHearts().size();
     }
-
 }

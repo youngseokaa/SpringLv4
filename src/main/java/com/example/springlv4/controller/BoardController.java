@@ -1,5 +1,6 @@
 package com.example.springlv4.controller;
 
+import com.example.springlv4.dto.BoardHeartResponseDto;
 import com.example.springlv4.dto.BoardRequestDto;
 import com.example.springlv4.dto.BoardResponseDto;
 import com.example.springlv4.security.UserDetailsImpl;
@@ -24,7 +25,7 @@ public class BoardController {
         return boardService.boardwrite(boardRequestDto, userDetails.getUser().getUsername());
     }
     @GetMapping("/read")
-    public List<BoardResponseDto> boardread(){
+    public List<BoardHeartResponseDto> boardread(){
         return boardService.boardread();
     }
     @PutMapping("/revise/{id}")

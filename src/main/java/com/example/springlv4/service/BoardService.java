@@ -1,5 +1,6 @@
 package com.example.springlv4.service;
 
+import com.example.springlv4.dto.BoardHeartResponseDto;
 import com.example.springlv4.dto.BoardRequestDto;
 import com.example.springlv4.dto.BoardResponseDto;
 import com.example.springlv4.entity.Board;
@@ -29,11 +30,12 @@ public class BoardService {
         return new BoardResponseDto(board, board.getUser());
     }
 
-    public  List<BoardResponseDto> boardread() {
+    public  List<BoardHeartResponseDto> boardread() {
         List<Board> board = boardRepository.findAll();
-        List<BoardResponseDto> boardResponseDtos = new ArrayList<>();
+        List<BoardHeartResponseDto> boardResponseDtos = new ArrayList<>();
+        Collections.reverse(board);
         for (Board value : board) {
-            boardResponseDtos.add(new BoardResponseDto(value, value.getUser()));
+            boardResponseDtos.add(new BoardHeartResponseDto(value));
         }
         return boardResponseDtos;
     }
