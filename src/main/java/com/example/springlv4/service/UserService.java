@@ -28,39 +28,32 @@ public class UserService {
     private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     @Transactional
-    public SignupResponseDto signup(SignupRequestDto signupRequestDto){
+    public SignupResponseDto signup(SignupRequestDto signupRequestDto) {
         String username = signupRequestDto.getUsername();
         String password = signupRequestDto.getPassword();
-        String pattern  = "^[a-z0-9]*$";
-        String pattern2  = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]*$";
-        if(username.length() > 3 && username.length() < 11){
-            if(password.length() > 7 && password.length() < 16){
-                if (Pattern.matches(pattern, username) && Pattern.matches(pattern2, password)) {
-                    Optional<User> found = userRepository.findByUsername(username);
-                    if (found.isPresent()) {
-                        throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
-                    }
-                    UserRoleEnum role = UserRoleEnum.USER;
-                    if (signupRequestDto.isAdmin()) {
-                        if (!signupRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {
-                            throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
-                        }
-                        role = UserRoleEnum.ADMIN;
-                    }
-                    User user = new User(username, password, role);
-                    userRepository.save(user);
-                    return new SignupResponseDto();
-                } else {
-                    throw new IllegalArgumentException("아이디는 소문자, 숫자만 입력해 주시고 비밀번호는 영어, 숫자만 입력해주세요");
+        if (!checkUsernameDuplication(username)) {
+            UserRoleEnum role = UserRoleEnum.USER;
+            if (signupRequestDto.isAdmin()) {
+                if (!signupRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {
+                    throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
                 }
-            }else{
-                throw new IllegalArgumentException("비밀번호를 8자리이상 15자리 이하로 등록해주세요");
+                role = UserRoleEnum.ADMIN;
             }
+            User user = new User(username, password, role);
+            userRepository.save(user);
+            return new SignupResponseDto();
         }else{
-            throw new IllegalArgumentException("아이디를 4자리 이상 10자리 이하로 등록해 주세요");
+            throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
         }
-
     }
+
+
+
+    public boolean checkUsernameDuplication(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+
 
     public LoginResponseDto login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
         String username = loginRequestDto.getUsername();

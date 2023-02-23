@@ -6,6 +6,8 @@ import com.example.springlv4.dto.BoardResponseDto;
 import com.example.springlv4.security.UserDetailsImpl;
 import com.example.springlv4.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +23,9 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping("/write")
-    public BoardResponseDto boardwrite(@RequestBody BoardRequestDto boardRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return boardService.boardwrite(boardRequestDto, userDetails.getUser().getUsername());
+    public ResponseEntity boardwrite(@RequestBody BoardRequestDto boardRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+         BoardResponseDto board = boardService.boardwrite(boardRequestDto, userDetails.getUser().getUsername());
+         return  ResponseEntity.ok(board);
     }
     @GetMapping("/read")
     public List<BoardHeartResponseDto> boardread(){
